@@ -24,6 +24,37 @@
 const express = require("express");
 const app = express();
 require("./conifg/database")
+const userModel = require("./models/user");
+
+
+app.post("/signup", async (req, res) => {
+
+    try {
+
+         const userObj = {
+           firstName: "Prabhat",
+           lastName: "Singh",
+           emailId: "epiejd1@gmail.com",
+           password: "eeijfeaa@345",
+           mobileNo: 7765834748,
+           age: 12,
+           gender: "male",
+         };
+         //creating a new instance of a user model
+         const user = new userModel(userObj);
+
+
+        await user.save();
+        res.send("user saved successfully");
+        
+    } catch (err){
+        res.status(400).send("this is not you it is done by us"+err);
+    }
+    
+
+    
+    
+})
 
 app.listen(1998, () => {
     console.log("successfully listening to port 1998");
