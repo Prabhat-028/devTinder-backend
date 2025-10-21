@@ -35,17 +35,17 @@ app.post("/signup", async (req, res) => {
 
     try {
 
-         const userObj = {
-           firstName: "Prabhat",
-           lastName: "Singh",
-           emailId: "epiejd1@gmail.com",
-           password: "eeijfeaa@345",
-           mobileNo: 7765834748,
-           age: 12,
-           gender: "male",
-         };
+        //  const userObj = {
+        //    firstName: "Prabhat",
+        //    lastName: "Singh",
+        //    emailId: "epiejd1@gmail.com",
+        //    password: "eeijfeaa@345",
+        //    mobileNo: 7765834748,
+        //    age: 12,
+        //    gender: "male",
+        //  };
          //creating a new instance of a user model
-         const user = new userModel(userObj);
+         const user = new userModel(req.body);
 
 
         await user.save();
