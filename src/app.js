@@ -26,8 +26,12 @@ const app = express();
 require("./conifg/database")
 const userModel = require("./models/user");
 
+//using middleware to fetch data dynamically
+app.use(express.json());
+
 
 app.post("/signup", async (req, res) => {
+    console.log(req.body);
 
     try {
 
