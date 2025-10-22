@@ -18,9 +18,6 @@
 // });
 
 
-
-
-
 const express = require("express");
 const app = express();
 require("./conifg/database")
@@ -44,6 +41,8 @@ app.post("/signup", async (req, res) => {
         //    age: 12,
         //    gender: "male",
         //  };
+
+
          //creating a new instance of a user model
          const user = new userModel(req.body);
 
@@ -58,6 +57,19 @@ app.post("/signup", async (req, res) => {
 
     
     
+})
+
+//get api call handler
+app.get("/user", async (req, res) => {
+    const userMobileNo = req.body.mobileNo;
+
+    try {
+        const user = await userModel.find({ mobileNo: userMobileNo });
+
+        res.send(user);
+    } catch (err) {
+        res.status(400).send("Something went wrong");
+    }
 })
 
 app.listen(1998, () => {
