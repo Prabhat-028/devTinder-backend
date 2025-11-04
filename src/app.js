@@ -27,7 +27,7 @@ const userModel = require("./models/user");
 app.use(express.json());
 
 
-app.post("/signup", async (req, res) => {
+app.post("/user", async (req, res) => {
     console.log(req.body);
 
     try {
@@ -60,17 +60,57 @@ app.post("/signup", async (req, res) => {
 })
 
 //get api call handler
+// app.get("/user", async (req, res) => {
+//     const userFirstName = req.body.firstName;
+
+//     try {
+//         const user = await userModel.find({ firstName: userFirstName });
+        
+//         //Handling if the user doesn't exist in the database
+//         if ( !user || user.length == 0)
+//             res.send("User not found");
+//         else
+//             res.send(user);
+//     } catch (err) {
+//         res.status(400).send("Something went wrong");
+//     }
+// })
+
+//get user by id
 app.get("/user", async (req, res) => {
-    const userMobileNo = req.body.mobileNo;
+    const userId = req.body._id;
 
     try {
-        const user = await userModel.find({ mobileNo: userMobileNo });
-
-        res.send(user);
+        const user = await userModel.findById({ _id: userId });
+        if (!user || user.length == 0) {
+            res.send("User not Found");
+        }
+        else {
+            res.send(user);
+        }
     } catch (err) {
         res.status(400).send("Something went wrong");
     }
 })
+
+//creating delete api
+app.delete("/user", async (req, res) => {
+    const userId = req.body.userId;
+    try {
+        const user = await userModel.findByIdAndDelete(userId);
+
+        if (!user) {
+            return res.status(404).send("User Not Found");
+        }
+
+        res.send("User Deleted Successfully");
+    }
+    catch (err) {
+        res.status(500).send("something went wrong");
+    }
+
+})
+
 
 app.listen(1998, () => {
     console.log("successfully listening to port 1998");
