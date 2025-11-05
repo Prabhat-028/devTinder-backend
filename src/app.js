@@ -111,6 +111,23 @@ app.delete("/user", async (req, res) => {
 
 })
 
+//creating update or patch api
+app.patch("/user", async (req, res) => {
+    const userId = req.body.userId;
+    const data = req.body;
+    
+    try {
+        const user = await userModel.findByIdAndUpdate({ _id: userId }, data);
+        if (!user) {
+            res.status(404).send("User not found");
+        }
+        res.send("User Updated Successfully");
+    }
+    catch (err) {
+        res.status(500).send("Something Went Wrong");
+    }
+})
+
 
 app.listen(1998, () => {
     console.log("successfully listening to port 1998");
