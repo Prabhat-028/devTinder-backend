@@ -9,7 +9,10 @@ const userSchema = new mongoose.Schema({
         type: String
     },
     emailId: {
-        type: String
+        type: String,
+        lowercase: true,
+        unique: true,
+        trim:true
     },
     password: {
         type: String
@@ -21,8 +24,17 @@ const userSchema = new mongoose.Schema({
         type: Number
     },
     gender: {
-        type: String
+        type: String,
+        lowercase:true,
+      validate(value) {
+          if (!["male", "female", "others"].includes(value)) {
+              throw new Error("Gender is not valid");
+          }
+      }
     }
+},
+{//adding timestamps for adding when user is registered on the application to the database dynamically
+    timestamps: true
 });
 
 const userModel=mongoose.model("User", userSchema);

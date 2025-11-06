@@ -113,11 +113,13 @@ app.delete("/user", async (req, res) => {
 
 //creating update or patch api
 app.patch("/user", async (req, res) => {
-    const userId = req.body.userId;
+    const userId = req.body._id;
     const data = req.body;
-    
+    console.log(data);
     try {
-        const user = await userModel.findByIdAndUpdate({ _id: userId }, data);
+        const user = await userModel.findByIdAndUpdate(userId , data,{returnDocument :"after",
+        runValidators :true});
+        
         if (!user) {
             res.status(404).send("User not found");
         }
