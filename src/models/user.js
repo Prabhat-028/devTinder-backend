@@ -3,25 +3,33 @@ const { stringify } = require("postcss");
 
 const userSchema = new mongoose.Schema({
     firstName: {
-        type: String
+        type: String,
+        required: true
     },
     lastName: {
         type: String
     },
     emailId: {
         type: String,
+        required: true,
         lowercase: true,
         unique: true,
-        trim:true
+        trim: true
     },
     password: {
         type: String
     },
     mobileNo: {
-        type: Number
+        type: Number,
+        validate (v) {
+      return /^[0-9]{10,11}$/.test(v); // allows 10 or 11 digits
     },
+    }, 
     age: {
         type: Number
+    },
+    skills: {
+        type:[String]
     },
     gender: {
         type: String,

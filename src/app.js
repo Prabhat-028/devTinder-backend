@@ -22,6 +22,7 @@ const express = require("express");
 const app = express();
 require("./conifg/database")
 const userModel = require("./models/user");
+const { default: isEmail } = require("validator/lib/isEmail");
 
 //using middleware to fetch data dynamically
 app.use(express.json());
@@ -44,8 +45,17 @@ app.post("/user", async (req, res) => {
 
 
          //creating a new instance of a user model
-         const user = new userModel(req.body);
-
+        
+        const {user,emailId,skills} = new userModel(req.body);
+        //adding validator to skills so someone cannot send mallicilus skills or greater skill lenght
+        if (skills.length > 10) {
+            throw new Error("skills is to long "+ skills);
+        }
+        
+        //using validator library to validate the email
+        if (!isEmail(emailId)) {
+            throw new Error("Email is not valid " + emailId);
+        }
 
         await user.save();
         res.send("user saved successfully");
