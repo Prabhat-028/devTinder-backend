@@ -1,0 +1,23 @@
+const { isStrongPassword, isEmail, isMobilePhone } = require("validator");
+
+const validateSignupData = (req) => {
+  const { firstName, lastName, emailId, password, mobileNo, skills } = req.body;
+
+//   console.log(firstName, lastName);
+
+  if (!firstName || !lastName) {
+    throw new Error("Enter first name and last name");
+  } else if (firstName.length < 3 || firstName.length > 30) {
+    throw new Error("Length of first name must be between 3 and 30 characters");
+  } else if (lastName.length < 3 || lastName.length > 30) {
+    throw new Error("Length of last name must be between 3 and 30 characters");
+  } else if (!isEmail(emailId)) {
+    throw new Error("Email ID is not valid");
+  } else if (!isStrongPassword(password)) {
+    throw new Error("Password is too weak");
+  } else if (!isMobilePhone(mobileNo.toString())) {
+    throw new Error("Mobile number is not valid");
+  }
+};
+
+module.exports = { validateSignupData };
