@@ -25,8 +25,10 @@ const userModel = require("./models/user");
 const { default: isEmail } = require("validator/lib/isEmail");
 const { validateSignupData } = require("./utils/validation");
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
 //using middleware to fetch data dynamically
 app.use(express.json());
+app.use(cookieParser());
 
 app.post("/login", async (req, res) => {
     const { emailId, password } = req.body;
@@ -37,6 +39,8 @@ app.post("/login", async (req, res) => {
         }
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (isPasswordValid) {
+
+            res.cookie("token", "eiru");
             res.send("login Successfull");
         } else {
             throw new Error("Invalid Credentials");
@@ -49,6 +53,14 @@ app.post("/login", async (req, res) => {
 
 
 })
+app.get("/login", async (req, res) => {
+    try {
+        console.log(req.cookies);
+        res.send("successful get call");
+    } catch (err) {
+        res.send("ERROR:");
+    }
+})
 
 app.post("/signup", async (req, res) => {
   console.log(req.body);
@@ -57,9 +69,11 @@ app.post("/signup", async (req, res) => {
     // ✅ Validate input first
     validateSignupData(req);
 
-      const {firstName,lastName,mobileNo, emailId, skills, password,age,gender } = req.body;
+      const { firstName, lastName, mobileNo, emailId, skills, password, age, gender } = req.body;
+      
+      //using bcrypt lib to create the password hash
       const passwordHash = await bcrypt.hash(password, 12);
-      console.log(passwordHash);
+    //   console.log(passwordHash);
 
     // ✅ Check skills constraint
     if (skills && skills.length > 10) {
@@ -80,7 +94,6 @@ app.post("/signup", async (req, res) => {
       );
       if (mobileNo.length > 10 || mobileNo.length < 10) {
           throw new Error("Please Enter Valid Moblie No");
-          
       }
 
     // ✅ Optionally validate email (if you re-enable that check)

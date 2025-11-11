@@ -7,9 +7,9 @@ const validateSignupData = (req) => {
 
   if (!firstName || !lastName) {
     throw new Error("Enter first name and last name");
-  } else if (firstName.length < 3 || firstName.length > 30) {
+  } else if (firstName.length < 3 || firstName.length > 20) {
     throw new Error("Length of first name must be between 3 and 30 characters");
-  } else if (lastName.length < 3 || lastName.length > 30) {
+  } else if (lastName.length < 3 || lastName.length > 20) {
     throw new Error("Length of last name must be between 3 and 30 characters");
   } else if (!isEmail(emailId)) {
     throw new Error("Email ID is not valid");
