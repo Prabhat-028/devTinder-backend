@@ -26,31 +26,19 @@ const { default: isEmail } = require("validator/lib/isEmail");
 const { validateSignupData } = require("./utils/validation");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
-const jwt  = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
+const { userAuth } = require("./middlewares/auth");
 //using middleware to fetch data dynamically
 app.use(express.json());
 app.use(cookieParser());
 
 
 //getting the cookies in request call
-app.get("/profile", async (req, res) => {
-    
-    const cookies = req.cookies;
-    //destructuring the cookies for the token
-    const { token } = cookies;
+app.get("/profile", userAuth,async (req, res) => {
 
-    //decoding the token for the real data
-    const decodedMessage = await jwt.verify(token, "rockySurface@123");
-    const { _id } = decodedMessage;
-    console.log("Logged in user is:-", _id);
-    //finding the user in the database by id
-    const user = await userModel.findById(_id);
-
-
-    console.log(cookies);
-    //sending the data of the user to the user
+    const user = req.user;
     res.send(user);
-})
+}) 
 
 app.post("/login", async (req, res) => {
     const { emailId, password } = req.body;
@@ -63,7 +51,7 @@ app.post("/login", async (req, res) => {
         if (isPasswordValid) {
 
             const token = jwt.sign({ _id: user._id }, "rockySurface@123");
-            console.log(token);
+            
 
             res.cookie("token",token);
             res.send("login Successfull");
