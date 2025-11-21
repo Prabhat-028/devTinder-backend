@@ -15,7 +15,7 @@ const validateSignupData = (req) => {
     throw new Error("Email ID is not valid");
   } else if (!isStrongPassword(password)) {
     throw new Error("Password is too weak");
-  } else if (!isMobilePhone(mobileNo.toString())) {
+  } else if (!isMobilePhone(String(mobileNo || ""))) {
     throw new Error("Mobile number is not valid");
   }
 };

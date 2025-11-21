@@ -28,161 +28,18 @@ const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const { userAuth } = require("./middlewares/auth");
+
+
+const authRouter = require("./routes/auth");
+const profileRouter = require("./routes/profile");
+const requestRouter = require("./routes/request");
 //using middleware to fetch data dynamically
 app.use(express.json());
 app.use(cookieParser());
 
-
-//getting the cookies in request call
-app.get("/profile", userAuth,async (req, res) => {
-
-    const user = req.user;
-    res.send(user);
-}) 
-
-app.post("/login", async (req, res) => {
-    const { emailId, password } = req.body;
-    try {
-        const user = await userModel.findOne({ emailId: emailId });
-        if (!user) {
-            throw new Error("Invalid Credentials");
-        }
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (isPasswordValid) {
-
-            const token = jwt.sign({ _id: user._id }, "rockySurface@123",{expiresIn:"1d"});
-            
-
-            res.cookie("token",token);
-            res.send("login Successfull");
-        } else {
-            throw new Error("Invalid Credentials");
-
-        }
-
-    } catch (err) {
-        res.status(400).send("ERROR : " + err.message);
-    }
-
-
-})
-app.get("/login", async (req, res) => {
-    try {
-        console.log(req.cookies);
-        res.send("successful get call");
-    } catch (err) {
-        res.send("ERROR:");
-    }
-})
-
-app.post("/signup", async (req, res) => {
-  console.log(req.body);
-
-  try {
-    // ✅ Validate input first
-    validateSignupData(req);
-
-      const { firstName, lastName, mobileNo, emailId, skills, password, age, gender } = req.body;
-      
-      //using bcrypt lib to create the password hash
-      const passwordHash = await bcrypt.hash(password, 12);
-    //   console.log(passwordHash);
-
-    // ✅ Check skills constraint
-    if (skills && skills.length > 10) {
-      throw new Error("Skills list is too long: " + skills);
-    }
-
-    // ✅ Create new user instance
-    const user = new userModel(
-        {   firstName,
-            lastName,
-            mobileNo,
-            emailId,
-            skills,
-            password:passwordHash,
-            age,
-            gender
-        }
-      );
-      if (mobileNo.length > 10 || mobileNo.length < 10) {
-          throw new Error("Please Enter Valid Moblie No");
-      }
-
-    // ✅ Optionally validate email (if you re-enable that check)
-    // if (!isEmail(emailId)) {
-    //     throw new Error("Email is not valid " + emailId);
-    // }
-
-    // ✅ Save user
-    await user.save();
-
-    res.send("User saved successfully");
-  } catch (err) {
-    console.error(err);
-    res.status(400).send("ERROR: " + err.message);
-  }
-});
-// app.post("/signup", async (req, res) => {
-//     console.log(req.body);
-
-//     try {
-
-//         validateSignupData(req);
-        
-//         //  const userObj = {
-//         //    firstName: "Prabhat",
-//         //    lastName: "Singh",
-//         //    emailId: "epiejd1@gmail.com",
-//         //    password: "eeijfeaa@345",
-//         //    mobileNo: 7765834748,
-//         //    age: 12,
-//         //    gender: "male",
-//         //  };
-
-
-//          //creating a new instance of a user model
-        
-//         const { user, emailId, skills } = new userModel(req.body);
-        
-//         //adding validator to skills so someone cannot send mallicilus skills or greater skill lenght
-//         if (skills.length > 10) {
-//             throw new Error("skills is to long "+ skills);
-//         }
-        
-//         // //using validator library to validate the email
-//         // if (!isEmail(emailId)) {
-//         //     throw new Error("Email is not valid " + emailId);
-//         // }
-
-//         await user.save();
-//         res.send("user saved successfully");
-        
-//     } catch (err){
-//         res.status(400).send("ERROR : "+err.message);
-//     }
-    
-
-    
-    
-// })
-
-//get api call handler
-// app.get("/user", async (req, res) => {
-//     const userFirstName = req.body.firstName;
-
-//     try {
-//         const user = await userModel.find({ firstName: userFirstName });
-        
-//         //Handling if the user doesn't exist in the database
-//         if ( !user || user.length == 0)
-//             res.send("User not found");
-//         else
-//             res.send(user);
-//     } catch (err) {
-//         res.status(400).send("Something went wrong");
-//     }
-// })
+app.use("/", authRouter);
+app.use("/", profileRouter);
+app.use("/", requestRouter);
 
 //get user by id
 app.get("/user", async (req, res) => {
