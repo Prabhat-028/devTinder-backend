@@ -10,8 +10,8 @@ const userAuth = async (req, res,next) => {
             
         }
 
-    const decodedObj = await jwt.verify(token, "rockySurface@123");
-
+        const decodedObj = await jwt.verify(token, "rockySurface@123");
+      
     const { _id } = decodedObj;
     const user = await userModel.findById(_id);
         if (!user) {

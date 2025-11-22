@@ -19,5 +19,12 @@ const validateSignupData = (req) => {
     throw new Error("Mobile number is not valid");
   }
 };
+const validateEditProfileData = (req) => {
+    const validEditFields = ["firstName", "lastName", "gender", "age", "skills", "password"];
 
-module.exports = { validateSignupData };
+    const isEditAllowed=Object.keys(req.body).every(field => validEditFields.includes(field));
+    return isEditAllowed;
+
+}
+
+module.exports = { validateSignupData,validateEditProfileData };
