@@ -23,8 +23,12 @@ const connectionRequestSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+//adding the compound index
+connectionRequestSchema.index({ fromUserId: 1, toUserId: 1 });
+
 //checking if the user send connection to himself
-connectionRequestSchema.pre("save", function () {
+connectionRequestSchema.pre("save", function (next) {
 	if (connectionRequestSchema.toUserId.equals(connectionRequestSchema.fromUserId)) {
 		throw new Error("Can't send yourself a request");
 	}
