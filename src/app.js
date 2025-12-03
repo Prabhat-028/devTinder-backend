@@ -28,6 +28,7 @@ const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const { userAuth } = require("./middlewares/auth");
+const { userRouter } = require("./routes/users");
 
 
 const authRouter = require("./routes/auth");
@@ -40,6 +41,7 @@ app.use(cookieParser());
 app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
+app.use("/",userRouter)
 
 //get user by id
 app.get("/user", async (req, res) => {

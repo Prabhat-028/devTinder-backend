@@ -21,7 +21,10 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String
-    },
+	},
+	photoURL: {
+		type:String
+	},
     mobileNo: {
         type: Number,
         validate (v) {
