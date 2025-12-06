@@ -1,0 +1,10 @@
+{
+	"editor.cursorSmoothCaretAnimation": "on",
+	"editor.cursorStyle": "line",
+	"editor.cursorSurroundingLines": 0,
+	"workbench.colorCustomizations": {
+
+	},
+	"workbench.preferredDarkColorTheme": "Default Dark Modern",
+	"workbench.sideBar.location": "left"
+}
