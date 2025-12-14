@@ -29,12 +29,14 @@ const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const { userAuth } = require("./middlewares/auth");
 const { userRouter } = require("./routes/users");
-
+const cors = require("cors");
 
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
+
 //using middleware to fetch data dynamically
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 

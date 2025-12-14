@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema({
               throw new Error("Gender is not valid");
           }
       }
-    }
+    } 
 },
 {//adding timestamps for adding when user is registered on the application to the database dynamically
     timestamps: true
