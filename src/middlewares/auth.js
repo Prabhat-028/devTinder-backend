@@ -6,7 +6,7 @@ const userAuth = async (req, res,next) => {
         const cookies = req.cookies;
         const { token } = cookies;
         if (!token) {
-            throw new Error("Token Not Valid");
+            return res.status(401).send("Please Login First!");
             
         }
 

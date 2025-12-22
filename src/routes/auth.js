@@ -7,27 +7,32 @@ const authRouter = express.Router();
 
 authRouter.post("/login", async (req, res) => {
     const { emailId, password } = req.body;
-    
-  try {
-    const user = await userModel.findOne({ emailId: emailId });
-    if (!user) {
-      throw new Error("Invalid Credentials");
-    }
 
-    const isPasswordValid = await user.validatePassword(password);
+    try {
+        const user = await userModel.findOne({ emailId });
+        if (!user) {
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
 
-    if (isPasswordValid) {
-      const token = await user.getJWT();
+        const isPasswordValid = await user.validatePassword(password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
 
-      res.cookie("token", token);
+        const token = await user.getJWT();
+
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false, // localhost
+            sameSite: "lax",
+        });
+
 		res.send(user);
-    } else {
-      throw new Error("Invalid Credentials");
+    } catch (err) {
+        return res.status(500).json({ message: "Server error" });
     }
-  } catch (err) {
-    res.status(400).send("ERROR : " + err.message);
-  }
 });
+
 
 authRouter.post("/signup", async (req, res) => {
 
