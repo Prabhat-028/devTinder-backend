@@ -17,10 +17,9 @@
 //   console.log("server is successfully listening/running on port 1998");
 // });
 
-
 const express = require("express");
 const app = express();
-require("./conifg/database")
+require("./conifg/database");
 const userModel = require("./models/user");
 const { default: isEmail } = require("validator/lib/isEmail");
 const { validateSignupData } = require("./utils/validation");
@@ -32,7 +31,7 @@ const { userRouter } = require("./routes/users");
 const cors = require("cors");
 
 const authRouter = require("./routes/auth");
-const profileRouter = require("./routes/profile"); 
+const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
 
 //using middleware to fetch data dynamically
@@ -75,7 +74,7 @@ app.use((req, res, next) => {
 app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
-app.use("/",userRouter)
+app.use("/", userRouter);
 
 //get user by id
 app.get("/user", async (req, res) => {
@@ -85,14 +84,13 @@ app.get("/user", async (req, res) => {
         const user = await userModel.findById({ _id: userId });
         if (!user || user.length == 0) {
             res.send("User not Found");
-        }
-        else {
+        } else {
             res.send(user);
         }
     } catch (err) {
         res.status(400).send("Something went wrong");
     }
-})
+});
 
 //creating delete api
 app.delete("/user", async (req, res) => {
@@ -105,12 +103,10 @@ app.delete("/user", async (req, res) => {
         }
 
         res.send("User Deleted Successfully");
-    }
-    catch (err) {
+    } catch (err) {
         res.status(500).send("something went wrong");
     }
-
-})
+});
 
 //creating update or patch api
 app.patch("/user", async (req, res) => {
@@ -118,20 +114,20 @@ app.patch("/user", async (req, res) => {
     const data = req.body;
     console.log(data);
     try {
-        const user = await userModel.findByIdAndUpdate(userId , data,{returnDocument :"after",
-        runValidators :true});
-        
+        const user = await userModel.findByIdAndUpdate(userId, data, {
+            returnDocument: "after",
+            runValidators: true,
+        });
+
         if (!user) {
             res.status(404).send("User not found");
         }
         res.send("User Updated Successfully");
-    }
-    catch (err) {
+    } catch (err) {
         res.status(500).send("Something Went Wrong");
     }
-})
-
+});
 
 app.listen(1998, () => {
     console.log("successfully listening to port 1998");
-})
+});
