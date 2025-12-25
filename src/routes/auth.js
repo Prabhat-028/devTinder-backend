@@ -25,6 +25,7 @@ authRouter.post("/login", async (req, res) => {
             httpOnly: true,
             secure: false, // localhost
             sameSite: "lax",
+            maxAge:8 * 8 * 24 * 60 * 60 * 1000,
         });
 
 		res.send(user);
@@ -82,9 +83,13 @@ authRouter.post("/signup", async (req, res) => {
     // }
 
     // ✅ Save user
-    await user.save();
+		const savedUser = await user.save();
+		const token = await savedUser.getJWT();
+		res.cookie("token", token, {
+            expires: new Date(Date.now() + 8 * 8 * 24 * 60 * 60 * 1000),
+        });
 
-    res.send("User saved successfully");
+    res.json({message:"User saved successfully",data:savedUser});
   } catch (err) {
     console.error(err);
     res.status(400).send("ERROR: " + err.message);
