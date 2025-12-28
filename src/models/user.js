@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
-const { stringify } = require("postcss");
 const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema({
