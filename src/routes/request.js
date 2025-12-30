@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const { userAuth } = require("../middlewares/auth");
 const connectionRequestModel = require("../models/connectionRequest");
 const userModel = require("../models/user");
-const sendEmail = require("../utils/sesSendEmail");
+
 const requestRouter = express.Router();
 
 requestRouter.post(
@@ -57,9 +57,6 @@ requestRouter.post(
                 status,
             });
             const data = await connectionData.save();
-			console.log("before email");
-			const emailres = await sendEmail.run();
-			console.log("email response", emailres);
 
             res.status(201).send(data);
         } catch (error) {
