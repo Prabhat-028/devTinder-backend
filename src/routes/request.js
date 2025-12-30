@@ -57,11 +57,11 @@ requestRouter.post(
                 status,
             });
 			const data = await connectionData.save();
-			const res = await sendEmail.run();
+			await sendEmail.run();
 
             res.status(201).send(data);
         } catch (error) {
-            console.error("request/send error:", error);
+            // console.error("request/send error:", error);
             res.status(500).send("ERROR:" + error.message);
         }
     }
