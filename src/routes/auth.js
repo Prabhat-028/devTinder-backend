@@ -5,12 +5,12 @@ const bcrypt = require("bcrypt");
 
 const authRouter = express.Router();
 authRouter.post("/login", async (req, res) => {
-    const { email, password } = req.body;
+    const { emailId, password } = req.body;
 
     try {
-        const normalizedEmail = email.trim().toLowerCase();
+        const normalizedEmail = emailId.trim().toLowerCase();
 
-        const user = await userModel.findOne({ email: normalizedEmail });
+        const user = await userModel.findOne({ emailId: normalizedEmail });
         if (!user) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
