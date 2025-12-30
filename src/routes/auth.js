@@ -4,12 +4,13 @@ const {validateSignupData} = require("../utils/validation");
 const bcrypt = require("bcrypt");
 
 const authRouter = express.Router();
-
 authRouter.post("/login", async (req, res) => {
-    const { emailId, password } = req.body;
+    const { email, password } = req.body;
 
     try {
-        const user = await userModel.findOne({ emailId });
+        const normalizedEmail = email.trim().toLowerCase();
+
+        const user = await userModel.findOne({ email: normalizedEmail });
         if (!user) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
@@ -23,16 +24,19 @@ authRouter.post("/login", async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false, // localhost
+            secure: false,
             sameSite: "lax",
-            maxAge:8 * 8 * 24 * 60 * 60 * 1000,
+            path: "/",
+            maxAge: 8 * 8 * 24 * 60 * 60 * 1000,
         });
 
-		res.send(user);
+        res.json(user);
     } catch (err) {
+        console.error(err);
         return res.status(500).json({ message: "Server error" });
     }
 });
+
 
 
 authRouter.post("/signup", async (req, res) => {
