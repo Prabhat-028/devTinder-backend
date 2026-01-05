@@ -1,60 +1,44 @@
 const { SendEmailCommand } = require("@aws-sdk/client-ses");
 const { sesClient } = require("./sesClient");
 
-const createSendEmailCommand = (toAddress, fromAddress) => {
+const TO_EMAIL = "kumar.prabhat23343@jeckukas.org.in";
+const FROM_EMAIL = "rockprabhat1@gmail.com"; // must be verified in SES
+
+const createSendEmailCommand = () => {
     return new SendEmailCommand({
         Destination: {
-            /* required */
-            CcAddresses: [
-                /* more items */
-            ],
-            ToAddresses: [
-                toAddress,
-                /* more To-email addresses */
-            ],
+            ToAddresses: [TO_EMAIL],
         },
         Message: {
-            /* required */
-            Body: {
-                /* required */
-                Html: {
-                    Charset: "UTF-8",
-                    Data: "HTML_FORMAT_BODY",
-                },
-                Text: {
-                    Charset: "UTF-8",
-                    Data: "TEXT_FORMAT_BODY",
-                },
-            },
             Subject: {
                 Charset: "UTF-8",
-                Data: "EMAIL_SUBJECT",
+                Data: "Connection Request",
+            },
+            Body: {
+                Text: {
+                    Charset: "UTF-8",
+                    Data: "You received a connection request.",
+                },
+                Html: {
+                    Charset: "UTF-8",
+                    Data: "<p>You received a <b>connection request</b>.</p>",
+                },
             },
         },
-        Source: fromAddress,
-        ReplyToAddresses: [
-            /* more items */
-        ],
+        Source: FROM_EMAIL,
     });
 };
 
 const run = async () => {
-    const sendEmailCommand = createSendEmailCommand(
-        "kumar.prabhat23343@jeckukas.org.in",
-        "rockprabhat1@gmail.com"
-    );
-
     try {
-        return await sesClient.send(sendEmailCommand);
-    } catch (caught) {
-        if (caught instanceof Error && caught.name === "MessageRejected") {
-            /** @type { import('@aws-sdk/client-ses').MessageRejected} */
-            const messageRejectedError = caught;
-            return messageRejectedError;
+        return await sesClient.send(createSendEmailCommand());
+    } catch (error) {
+        if (error.name === "MessageRejected") {
+            console.error("SES rejected email:", error.message);
+            return error;
         }
-        throw caught;
+        throw error;
     }
 };
 
-// snippet-end:[ses.JavaScript.email.sendEmailV3]
 module.exports = { run };

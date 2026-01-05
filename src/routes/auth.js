@@ -2,17 +2,22 @@ const express = require("express");
 const userModel = require("../models/user");
 const {validateSignupData} = require("../utils/validation");
 const bcrypt = require("bcrypt");
-
+const mongoose = require("mongoose");
 const authRouter = express.Router();
 authRouter.post("/login", async (req, res) => {
-    const { emailId, password } = req.body;
+	const { emailId, password } = req.body;
+	console.log(emailId);
+	console.log("Connected DB:", mongoose.connection.name);
+    console.log("Users count:", await userModel.countDocuments());
+
 
     try {
-        const normalizedEmail = emailId.trim().toLowerCase();
+        // const normalizedEmail = emailId.trim().toLowerCase();
 
-        const user = await userModel.findOne({ emailId: normalizedEmail });
+		const user = await userModel.findOne({ emailId: emailId });
+		console.log(user);
         if (!user) {
-            return res.status(401).json({ message: "Invalid credentials" });
+            return res.status(401).json({ message: "Invalid" });
         }
 
         const isPasswordValid = await user.validatePassword(password);
@@ -36,6 +41,53 @@ authRouter.post("/login", async (req, res) => {
         return res.status(500).json({ message: "Server error" });
     }
 });
+
+// authRouter.post("/login", async (req, res) => {
+//     let { emailId, password } = req.body;
+
+//     console.log("RAW EMAIL FROM FE:", emailId);
+//     console.log("RAW PASSWORD FROM FE:", password);
+
+//     emailId = emailId.trim();
+
+//     try {
+//         const users = await userModel.find({});
+//         console.log(
+//             "ALL EMAILS IN DB:",
+//             users.map((u) => `[${u.emailId}]`)
+//         );
+
+//         const user = await userModel.findOne({
+//             emailId: { $regex: `^${emailId}$`, $options: "i" },
+//         });
+
+//         console.log("FOUND USER:", user);
+
+//         if (!user) {
+//             console.log("❌ USER NOT FOUND");
+//             return res.status(401).json({ message: "Invalid email" });
+//         }
+
+//         console.log("STORED HASH:", user.password);
+
+//         const isPasswordValid = await bcrypt.compare(password, user.password);
+//         console.log("PASSWORD MATCH:", isPasswordValid);
+
+//         if (!isPasswordValid) {
+//             console.log("❌ PASSWORD WRONG");
+//             return res.status(401).json({ message: "Invalid password" });
+//         }
+
+//         console.log("✅ LOGIN SUCCESS");
+
+//         return res.json({ success: true });
+//     } catch (err) {
+//         console.error("SERVER ERROR:", err);
+//         return res.status(500).json({ message: "Server error" });
+//     }
+// });
+
+
 
 
 

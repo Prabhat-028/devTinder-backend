@@ -29,6 +29,7 @@ const jwt = require("jsonwebtoken");
 const { userAuth } = require("./middlewares/auth");
 const { userRouter } = require("./routes/users");
 const cors = require("cors");
+require("./utils/cronjob");
 
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
@@ -112,7 +113,6 @@ app.delete("/user", async (req, res) => {
 app.patch("/user", async (req, res) => {
     const userId = req.body._id;
     const data = req.body;
-    console.log(data);
     try {
         const user = await userModel.findByIdAndUpdate(userId, data, {
             returnDocument: "after",
