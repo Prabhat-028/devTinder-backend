@@ -6,16 +6,16 @@ const mongoose = require("mongoose");
 const authRouter = express.Router();
 authRouter.post("/login", async (req, res) => {
 	const { emailId, password } = req.body;
-	console.log(emailId);
-	console.log("Connected DB:", mongoose.connection.name);
-    console.log("Users count:", await userModel.countDocuments());
+	// console.log(emailId);
+	// console.log("Connected DB:", mongoose.connection.name);
+    // console.log("Users count:", await userModel.countDocuments());
 
 
     try {
         // const normalizedEmail = emailId.trim().toLowerCase();
 
 		const user = await userModel.findOne({ emailId: emailId });
-		console.log(user);
+		// console.log(user);
         if (!user) {
             return res.status(401).json({ message: "Invalid" });
         }
@@ -37,7 +37,7 @@ authRouter.post("/login", async (req, res) => {
 
         res.json(user);
     } catch (err) {
-        console.error(err);
+        // console.error(err);
         return res.status(500).json({ message: "Server error" });
     }
 });
@@ -94,7 +94,7 @@ authRouter.post("/login", async (req, res) => {
 authRouter.post("/signup", async (req, res) => {
 
     try {
-        console.log(req.body);
+        // console.log(req.body);
     // ✅ Validate input first
     validateSignupData(req);
 
@@ -147,7 +147,7 @@ authRouter.post("/signup", async (req, res) => {
 
     res.json({message:"User saved successfully",data:savedUser});
   } catch (err) {
-    console.error(err);
+    // console.error(err);
     res.status(400).send("ERROR: " + err.message);
   }
 });  
