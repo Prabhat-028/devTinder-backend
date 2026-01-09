@@ -19,10 +19,8 @@ const chatSchema = new mongoose.Schema({
 	participants: [
 		{type:mongoose.Schema.Types.ObjectId,ref:"User",required:true}
 	],
-	message:[messageSchema]
-}, {
-	timestamps: true
+	messages:[messageSchema]
 });
 
-const chat = mongoose.Model("chat", chatSchema);
-module.exports = chat ;
+const Chat = mongoose.model("Chat", chatSchema);
+module.exports = {Chat };
